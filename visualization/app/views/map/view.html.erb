@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <title>Simple Map</title>
+    <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+    <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #F1EEE8;
+        font-family: "Helvetica";
+      }
+      h1 {
+        color: #666666;
+        text-align: left;
+        margin-left: 8px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+
+      table {
+        width: 100%;
+        text-align: center;
+        table-layout: fixed;
+        border-collapse: collapse;
+      }
+      .year {
+        background-color: #F1EEE8;
+        width: (100/3)%;
+        overflow: hidden;
+
+        cursor: pointer;
+        color: red;
+      }
+      .month {
+        background-color: #F1EEE8;
+        width: (100/12)%;
+        overflow: hidden;
+
+        cursor: pointer;
+      }
+      .day {
+        background-color: #F1EEE8;
+        width: (100/31)%;
+        overflow: hidden;
+
+        cursor: pointer;
+      }
+      #map {
+        background-color: #DC9E9E;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        height: 75vh;
+        margin:0;
+      }
+
+      .current {
+        color: #DC9E9E;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      .not-current {
+        color: #D9D0C9;
+      }
+
+      a:link {
+        text-decoration: none;
+        color: #D9D0C9;
+      }
+      a:visited {
+
+      }
+      a:hover {
+        color: gray;
+      }
+      a:active {
+
+      }
+
+      div.hidden {
+
+        display: none;
+      }
+
+      #footer {
+        text-align: right;
+        color: #D9D0C9;
+        margin-right: 8px;
+      }
+
+      #upload, #help {
+        color: #666666;
+      }
+
+    </style>
+    <script src="http://js.arcgis.com/3.13/"></script>
+    <script>
+      url = "data/view.csv"; //not a view, but request to return csv (rails download csv); request read from database then return in csv
+      var map, csv;
+
+      require([
+        "esri/map", 
+        "esri/layers/CSVLayer",
+        "esri/Color",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/renderers/SimpleRenderer",
+        "esri/InfoTemplate",
+        //"esri/dijit/Legend",
+        "dojo/domReady!"
+      ], function(
+        Map, CSVLayer, Color, SimpleMarkerSymbol, SimpleRenderer, InfoTemplate
+      ) {
+        map = new Map("map", {
+          basemap: "osm",
+          center: [ -122.30, 37.81 ],
+          zoom: 15
+        });
+        csv = new CSVLayer(url);
+        var marker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 16, null);
+        var renderer = new SimpleRenderer(marker);
+        renderer.setColorInfo({
+          field:"concentration",
+/*          minDataValue:  0,
+          maxDataValue:  0.035,
+          colors: [
+            new Color([0, 255, 0]),
+            new Color([255, 255, 0]),
+            new Color([255, 0, 0]),
+          ],*/
+          stops: [
+            { value: 0.010, color: new Color([0, 255, 0, 0.7]) },     // -1 stddev
+            { value: 0.025, color: new Color([255, 255, 0, 0.7]) },     // average
+            { value: 0.035, color: new Color([255, 0, 0, 0.7]) }  // 1 stddev
+          ]
+        });
+        csv.setRenderer(renderer);
+        var template = new InfoTemplate("${time}", "${concentration} mg/m3");
+        //var legend = new Legend({map: map}, "legend");
+        csv.setInfoTemplate(template);
+        map.addLayer(csv);
+        //legend.startup();
+      });
+      $(function() {
+        $("a#show_upload").click(function(event){
+          event.preventDefault();
+          $("div#upload").toggle();
+        });
+      }); 
+      $(function() {
+        $("a#show_help").click(function(event){
+          event.preventDefault();
+          $("div#help").toggle();
+        });
+      }); 
+    </script>
+  </head>
+
+  <body>
+    <header>
+    <h1>West Oakland Environmental Indicators Project – PM<sub>2.5</sub> concentrations</h1>
+    <header>
+    <nav>
+    <table>
+      <tr>
+        <td class="year"><%= link_to "2013", root_path(:range => "2013"), class: current("2013")%></td>
+        <td class="year"><%= link_to "2014", root_path(:range => "2014"), class: current("2014")%></td>
+        <td class="year"><%= link_to "2015", root_path(:range => "2015"), class: current("2015")%></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td class="month"><%= link_to "Jan", root_path(:range => "#{Feature.get_year}-01"), class: current("#{Feature.get_year}-01")%></td>
+        <td class="month"><%= link_to "Feb", root_path(:range => "#{Feature.get_year}-02"), class: current("#{Feature.get_year}-02")%></td>
+        <td class="month"><%= link_to "Mar", root_path(:range => "#{Feature.get_year}-03"), class: current("#{Feature.get_year}-03")%></td>
+        <td class="month"><%= link_to "Apr", root_path(:range => "#{Feature.get_year}-04"), class: current("#{Feature.get_year}-04")%></td>
+        <td class="month"><%= link_to "May", root_path(:range => "#{Feature.get_year}-05"), class: current("#{Feature.get_year}-05")%></td>
+        <td class="month"><%= link_to "Jun", root_path(:range => "#{Feature.get_year}-06"), class: current("#{Feature.get_year}-06")%></td>
+        <td class="month"><%= link_to "Jul", root_path(:range => "#{Feature.get_year}-07"), class: current("#{Feature.get_year}-07")%></td>
+        <td class="month"><%= link_to "Aug", root_path(:range => "#{Feature.get_year}-08"), class: current("#{Feature.get_year}-08")%></td>
+        <td class="month"><%= link_to "Sep", root_path(:range => "#{Feature.get_year}-09"), class: current("#{Feature.get_year}-09")%></td>
+        <td class="month"><%= link_to "Oct", root_path(:range => "#{Feature.get_year}-10"), class: current("#{Feature.get_year}-10")%></td>
+        <td class="month"><%= link_to "Nov", root_path(:range => "#{Feature.get_year}-11"), class: current("#{Feature.get_year}-11")%></td>
+        <td class="month"><%= link_to "Dec", root_path(:range => "#{Feature.get_year}-12"), class: current("#{Feature.get_year}-12")%></td>
+      </tr>
+      </table>
+      <table>
+      <tr>
+        <% (1..31).each do |i| %>
+        <td class="day"><%= link_to i, root_path(:range => "#{Feature.get_year_month}-#{"%02d" % i}"), class: current("#{Feature.get_year_month}-#{"%02d" % i}")%></td>
+        <% end %>
+      </tr>
+    </table>
+    </nav>
+
+    <div id="map" class="map"></div>
+
+
+
+    <p id="footer">
+      <a href="#" id="show_help" class="not-current">help </a>|
+      <a href="#" id="show_upload" class="not-current">feedback </a>|
+      <a href="data/view.csv" class="not-current">download </a>|
+      <a href="#" id="show_upload" class="not-current">upload</a>
+
+      <div id="help" class="hidden">
+        PM<sub>2.5</sub> is bad, okay?
+      </div>
+      <div id="upload" class="hidden">
+        <%= form_tag({action: :upload}, multipart: true) do %>
+        <%= file_field_tag :dust %>
+        <%= file_field_tag :gps %>
+        <%= submit_tag "Upload" %>
+        <% end %>
+        <br>
+      </div>
+    </p>
+
+  </body>
+</html>
