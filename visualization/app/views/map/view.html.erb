@@ -97,8 +97,10 @@
         margin-right: 8px;
       }
 
-      #upload, #help {
+      #upload, #help, #feedback {
         color: #666666;
+        font-size: 16px;
+        padding-left: 8px;
       }
 
       #key {
@@ -173,6 +175,12 @@
           $("div#help").toggle();
         });
       }); 
+      $(function() {
+        $("a#show_feedback").click(function(event){
+          event.preventDefault();
+          $("div#feedback").toggle();
+        });
+      }); 
     </script>
   </head>
 
@@ -228,12 +236,16 @@
 
     <p id="footer">
       <a href="#" id="show_help" class="not-current">help </a>|
-      <a href="#" id="show_upload" class="not-current">feedback </a>|
+      <a href="#" id="show_feedback" class="not-current">feedback </a>|
       <a href="data/view.csv" class="not-current">download </a>|
       <a href="#" id="show_upload" class="not-current">upload</a>
 
       <div id="help" class="hidden">
-        PM<sub>2.5</sub> is bad, okay?
+        The World Health Organization (WHO) states that an an annual average concentration of 0.010 mg/m<sup>3</sup> represents the lower end of the range over which significant effects on survival were observed in the American Cancer Society's study in 2002. Thus, the WHO sets the air quality guideline (AQG) for PM<sub>2.5</sub> at 0.010 mg/m<sup>3</sup>, which is "the lowest levels at which total, cardiopulmonary and lung cancer mortality have been shown to increase with more than 95% confidence in response to long-term exposure to PM<sub>2.5</sub>. At a PM2.5 concentration of 0.035 mg/m<sup>3</sup>, the WHO states, there is "a 15% higher long-term mortality risk relative to the AQG level."
+      </div>
+      <div id="feedback" class="hidden">
+        For questions and information contact WOEIP by calling (510)257-5640
+        <br>
       </div>
       <div id="upload" class="hidden">
         <%= form_tag({action: :upload}, multipart: true) do %>
