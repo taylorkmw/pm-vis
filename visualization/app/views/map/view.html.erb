@@ -18,6 +18,7 @@
       }
       h1 {
         color: #666666;
+        font-size: 16px;
         text-align: left;
         margin-left: 8px;
         margin-top: 8px;
@@ -55,7 +56,6 @@
       #map {
         background-color: #DC9E9E;
         padding-top: 2px;
-        padding-bottom: 2px;
         height: 75vh;
         margin:0;
       }
@@ -99,6 +99,18 @@
 
       #upload, #help {
         color: #666666;
+      }
+
+      #key {
+        background: linear-gradient(to right, rgba(0, 255, 0, 0.7), rgba(255, 255, 0, 0.7), rgba(255, 0, 0, 0.7));
+        color: #666666;
+        font-size: 8px;
+        padding-bottom: 2px;
+        padding-top: 2px;
+      }
+
+      .value {
+        text-align: right;
       }
 
     </style>
@@ -166,7 +178,7 @@
 
   <body>
     <header>
-    <h1>West Oakland Environmental Indicators Project – PM<sub>2.5</sub> concentrations</h1>
+    <h1>West Oakland Environmental Indicators Project – PM<sub>2.5</sub> concentrations (mg/m<sup>3</sup>)</h1>
     <header>
     <nav>
     <table>
@@ -202,6 +214,15 @@
     </nav>
 
     <div id="map" class="map"></div>
+    <div id="key">
+      <table>
+        <tr>
+          <td class="value">0.010</td>
+          <td class="value">0.025</td>
+          <td class="value">> 0.035</td>
+        </tr>
+      </table>
+    </div>
 
 
 
