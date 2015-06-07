@@ -118,7 +118,7 @@
     </style>
     <script src="http://js.arcgis.com/3.13/"></script>
     <script>
-      url = "data/view.csv"; //not a view, but request to return csv (rails download csv); request read from database then return in csv
+      url = "data/view.csv";
       var map, csv;
 
       require([
@@ -128,7 +128,6 @@
         "esri/symbols/SimpleMarkerSymbol",
         "esri/renderers/SimpleRenderer",
         "esri/InfoTemplate",
-        //"esri/dijit/Legend",
         "dojo/domReady!"
       ], function(
         Map, CSVLayer, Color, SimpleMarkerSymbol, SimpleRenderer, InfoTemplate
@@ -143,25 +142,16 @@
         var renderer = new SimpleRenderer(marker);
         renderer.setColorInfo({
           field:"concentration",
-/*          minDataValue:  0,
-          maxDataValue:  0.035,
-          colors: [
-            new Color([0, 255, 0]),
-            new Color([255, 255, 0]),
-            new Color([255, 0, 0]),
-          ],*/
           stops: [
-            { value: 0.010, color: new Color([0, 255, 0, 0.7]) },     // -1 stddev
-            { value: 0.025, color: new Color([255, 255, 0, 0.7]) },     // average
-            { value: 0.035, color: new Color([255, 0, 0, 0.7]) }  // 1 stddev
+            { value: 0.012, color: new Color([0, 255, 0, 0.7]) },
+            { value: 0.025, color: new Color([255, 255, 0, 0.7]) },
+            { value: 0.035, color: new Color([255, 0, 0, 0.7]) }
           ]
         });
         csv.setRenderer(renderer);
         var template = new InfoTemplate("${time}", "${concentration} mg/m3");
-        //var legend = new Legend({map: map}, "legend");
         csv.setInfoTemplate(template);
         map.addLayer(csv);
-        //legend.startup();
       });
       $(function() {
         $("a#show_upload").click(function(event){
@@ -225,7 +215,7 @@
     <div id="key">
       <table>
         <tr>
-          <td class="value">0.010</td>
+          <td class="value">0.012</td>
           <td class="value">0.025</td>
           <td class="value">> 0.035</td>
         </tr>
@@ -249,8 +239,8 @@
       </div>
       <div id="upload" class="hidden">
         <%= form_tag({action: :upload}, multipart: true) do %>
-        <%= file_field_tag :dust %>
-        <%= file_field_tag :gps %>
+        <label for="dust">DustTrak</label> <%= file_field_tag :dust %>
+        <label for="gps">GPS</label> <%= file_field_tag :gps %>
         <%= submit_tag "Upload" %>
         <% end %>
         <br>
