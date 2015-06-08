@@ -1,5 +1,10 @@
 class Feature < ActiveRecord::Base
 	@@range
+	@@valid_range = Set.new
+	all.each do |feature|
+		@@valid_range.add(feature[:time])
+	end
+
 	def self.set_range(time)
 		@@range = time
 	end
@@ -16,6 +21,15 @@ class Feature < ActiveRecord::Base
 		CSV.foreach(file.path, headers: true) do |row|
 			Feature.create! row.to_hash
 		end
+	end
+
+	def self.contains?(range)
+		@@valid_range.each do |r|
+			if r.start_with?(range)
+				return true
+			end
+		end
+		return false
 	end
 
 	def self.to_csv
