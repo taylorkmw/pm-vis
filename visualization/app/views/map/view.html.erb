@@ -13,16 +13,22 @@
         padding: 0;
       }
       body {
-        background-color: #F1EEE8;
+        background-color: #EFEAD1;
         font-family: "Helvetica";
       }
       h1 {
-        color: #666666;
-        font-size: 16px;
+        color: #6D2713;
+        font-size: 32px;
         text-align: left;
         margin-left: 8px;
-        margin-top: 8px;
-        margin-bottom: 8px;
+        margin-top: 16px;
+        margin-bottom: 0px;
+      }
+
+      #header img,
+      #header h1 {
+        float:left;
+
       }
 
       table {
@@ -32,7 +38,7 @@
         border-collapse: collapse;
       }
       .year {
-        background-color: #F1EEE8;
+        background-color: #EFEAD1;
         width: (100/3)%;
         overflow: hidden;
 
@@ -40,14 +46,14 @@
         color: red;
       }
       .month {
-        background-color: #F1EEE8;
+        background-color: #EFEAD1;
         width: (100/12)%;
         overflow: hidden;
 
         cursor: pointer;
       }
       .day {
-        background-color: #F1EEE8;
+        background-color: #EFEAD1;
         width: (100/31)%;
         overflow: hidden;
 
@@ -176,7 +182,14 @@
 
   <body>
     <header>
-    <h1>West Oakland Environmental Indicators Project – PM<sub>2.5</sub> concentrations (mg/m<sup>3</sup>)</h1>
+      <div id="header">
+        <%= link_to "http://www.woeip.org" do %>
+          <%= image_tag("woeip-logo.png", size: "75") %>
+        <% end %>
+        <h1>
+          WOEIP Air Maps | PM<sub>2.5</sub>
+        </h1>
+      </div>
     <header>
     <nav>
     <table>
