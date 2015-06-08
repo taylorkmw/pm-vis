@@ -28,10 +28,9 @@
       #header img,
       #header h1 {
         float:left;
-
       }
 
-      table {
+      .selector {
         width: 100%;
         text-align: center;
         table-layout: fixed;
@@ -67,7 +66,7 @@
       }
 
       .current {
-        color: #DC9E9E;
+        color: #DC9E9E !important;
         padding-top: 8px;
         padding-bottom: 8px;
         margin-bottom: 8px;
@@ -150,8 +149,8 @@
           field:"concentration",
           stops: [
             { value: 0.012, color: new Color([0, 255, 0, 0.7]) },
-            { value: 0.025, color: new Color([255, 255, 0, 0.7]) },
-            { value: 0.035, color: new Color([255, 0, 0, 0.7]) }
+            { value: 0.035, color: new Color([255, 255, 0, 0.7]) },
+            { value: 0.055, color: new Color([255, 0, 0, 0.7]) }
           ]
         });
         csv.setRenderer(renderer);
@@ -192,14 +191,14 @@
       </div>
     <header>
     <nav>
-    <table>
+    <table class="selector">
       <tr>
         <td class="year"><%= link_to "2013", root_path(:range => "2013"), class: current("2013")%></td>
         <td class="year"><%= link_to "2014", root_path(:range => "2014"), class: current("2014")%></td>
         <td class="year"><%= link_to "2015", root_path(:range => "2015"), class: current("2015")%></td>
       </tr>
     </table>
-    <table>
+    <table class="selector">
       <tr>
         <td class="month"><%= link_to "Jan", root_path(:range => "#{Feature.get_year}-01"), class: current("#{Feature.get_year}-01")%></td>
         <td class="month"><%= link_to "Feb", root_path(:range => "#{Feature.get_year}-02"), class: current("#{Feature.get_year}-02")%></td>
@@ -215,7 +214,7 @@
         <td class="month"><%= link_to "Dec", root_path(:range => "#{Feature.get_year}-12"), class: current("#{Feature.get_year}-12")%></td>
       </tr>
       </table>
-      <table>
+      <table class="selector">
       <tr>
         <% (1..31).each do |i| %>
         <td class="day"><%= link_to i, root_path(:range => "#{Feature.get_year_month}-#{"%02d" % i}"), class: current("#{Feature.get_year_month}-#{"%02d" % i}")%></td>
@@ -226,11 +225,11 @@
 
     <div id="map" class="map"></div>
     <div id="key">
-      <table>
+      <table class="selector">
         <tr>
           <td class="value">0.012</td>
-          <td class="value">0.025</td>
-          <td class="value">> 0.035</td>
+          <td class="value">0.035</td>
+          <td class="value">> 0.055</td>
         </tr>
       </table>
     </div>
@@ -241,10 +240,72 @@
       <a href="#" id="show_help" class="not-current">help </a>|
       <a href="#" id="show_feedback" class="not-current">feedback </a>|
       <a href="data/view.csv" class="not-current">download </a>|
-      <a href="#" id="show_upload" class="not-current">upload</a>
+      <a href="#" id="show_upload" class="current">upload</a>
 
       <div id="help" class="hidden">
-        The World Health Organization (WHO) states that an an annual average concentration of 0.010 mg/m<sup>3</sup> represents the lower end of the range over which significant effects on survival were observed in the American Cancer Society's study in 2002. Thus, the WHO sets the air quality guideline (AQG) for PM<sub>2.5</sub> at 0.010 mg/m<sup>3</sup>, which is "the lowest levels at which total, cardiopulmonary and lung cancer mortality have been shown to increase with more than 95% confidence in response to long-term exposure to PM<sub>2.5</sub>. At a PM2.5 concentration of 0.035 mg/m<sup>3</sup>, the WHO states, there is "a 15% higher long-term mortality risk relative to the AQG level."
+        The EPA sets both an annual and a 24-hour standard for PM<sub>2.5</sub>.
+        <ul>
+          <li>An area will meet the standard if the three-year average of its annual average PM<sub>2.5</sub> concentration is less than or equal to 0.012 mg/m<sup>3</sup></li>
+          <li>An area meets the 24-hour standard if the 98th percentile of 24-hour PM<sub>2.5</sub> concentrations in one year, averaged over three years, is less than or equal to 0.035 mg/m<sup>3</sup></li>
+        </ul>
+        <table>
+          <tr>
+            <th>
+              AQI Category
+            </th>
+            <th>
+              Breakpoints (mg/m<sup>3</sup>, 24-hour average)
+            </th>
+          </tr>
+          <tr>
+            <td>
+              Good
+            </td>
+            <td>
+              0.0-0.012
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Moderate
+            </td>
+            <td>
+              0.012-0.035
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Unhealthy for Sensitive Groups
+            </td>
+            <td>
+              0.035-0.055
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Unhealthy
+            </td>
+            <td>
+              0.055-0.15
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Very Unhealthy
+            </td>
+            <td>
+              0.15-0.25
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Hazardous
+            </td>
+            <td>
+              > 0.25
+            </td>
+          </tr>
+        </table>
       </div>
       <div id="feedback" class="hidden">
         For questions and information contact WOEIP by calling (510)257-5640
